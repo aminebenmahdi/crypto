@@ -5,9 +5,13 @@ from cryptography.hazmat.primitives.ciphers.aead import (
 
 def encrypt(msg: bytes, key: bytes, nonce: bytes) -> bytes:
     # A implémenter en utilisant la class AESGCM
-    pass
+    aesgcm = AESGCM(key)
+    ciphertext = aesgcm.encrypt(nonce, msg, None)
+    return ciphertext
 
 
-def decrypt(msg: bytes, key: bytes, nonce: bytes) -> bytes:
+def decrypt(ciphertext: bytes, key: bytes, nonce: bytes) -> bytes:
     # A implémenter en utilisant la class AESGCM
-    pass
+    aesgcm = AESGCM(key)
+    plaintext = aesgcm.decrypt(nonce, ciphertext, None)
+    return plaintext
