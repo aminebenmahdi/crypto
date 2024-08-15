@@ -3,30 +3,41 @@ from cryptoy.utils import (
     unicodes_to_str,
 )
 
-# TP: Chiffrement de César
-
+# tp: chiffrement de césar
 
 def encrypt(msg: str, shift: int) -> str:
-    # Implémenter le chiffrement de César
-    # Il faut utiliser la fonction str_to_unicodes, puis appliquer la formule
-    # (x + shift) % 0x110000 pour chaque unicode du tableau puis utiliser
-    # unicodes_to_str pour repasser en string
-    pass
+    """
+    chiffre un message en utilisant le chiffrement de césar.
+
+    :param msg: le message a chiffrer.
+    :param shift: le decalage a appliquer pour chaque caractere.
+    :return: le message chiffre.
+    """
+    res = [(char_code + shift) % 0x110000 for char_code in str_to_unicodes(msg)]
+    return unicodes_to_str(res)
 
 
 def decrypt(msg: str, shift: int) -> str:
-    # Implémenter le déchiffrement. Astuce: on peut implémenter le déchiffrement en
-    # appelant la fonction de chiffrement en modifiant légèrement le paramètre
-    pass
+    """
+    dechiffre un message en utilisant le chiffrement de césar.
+
+    :param msg: le message a dechiffrer.
+    :param shift: le decalage a appliquer (inverse du chiffrement).
+    :return: le message dechiffre.
+    """
+    return encrypt(msg, -shift)
 
 
 def attack() -> tuple[str, int]:
+    """
+    attaque pour dechiffrer un message chiffre en utilisant une connaissance partielle du texte en clair.
+
+    :return: un couple contenant le message dechiffre et le decalage utilise pour le chiffrement.
+    :raises RuntimeError: si aucun decalage valide n'est trouve.
+    """
     s = "恱恪恸急恪恳恳恪恲恮恸急恦恹恹恦恶恺恪恷恴恳恸急恵恦恷急恱恪急恳恴恷恩怱急恲恮恳恪恿急恱恦急恿恴恳恪"
-    # Il faut déchiffrer le message s en utilisant l'information:
-    # 'ennemis' apparait dans le message non chiffré
-
-    # Code a placer ici, il faut return un couple (msg, shift)
-    # ou msg est le message déchiffré, et shift la clef de chiffrage correspondant
-
-    # Si on ne trouve pas on lance une exception:
-    raise RuntimeError("Failed to attack")
+    for shift in range(0x110000):
+        decrypted_msg = decrypt(s, shift)
+        if 'enemies' in decrypted_msg:
+            return decrypted_msg, shift
+    raise RuntimeError("failed to attack")

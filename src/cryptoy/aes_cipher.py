@@ -1,13 +1,11 @@
-from cryptography.hazmat.primitives.ciphers.aead import (
-    AESGCM,
-)
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 
 def encrypt(msg: bytes, key: bytes, nonce: bytes) -> bytes:
-    # A implémenter en utilisant la class AESGCM
-    pass
+    # implementer le chiffrement en utilisant la classe aesgcm
+    return AESGCM(key).encrypt(nonce, msg, None)
 
 
 def decrypt(msg: bytes, key: bytes, nonce: bytes) -> bytes:
-    # A implémenter en utilisant la class AESGCM
-    pass
+    # implementer le dechiffrement en utilisant la classe aesgcm
+    return AESGCM(key).decrypt(nonce, msg, None)
