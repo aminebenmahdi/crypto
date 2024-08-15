@@ -32,7 +32,15 @@ def attack(passwords: list[str], passwords_database: dict[str, str]) -> dict[str
 
     # A implémenter
     # Doit calculer le mots de passe de chaque utilisateur grace à une attaque par dictionnaire
-
+    
+    # Create a lookup table for hashed passwords
+    LUT = {hash_password(password): password for password in passwords}
+    
+    # Map hashed passwords in the database to plaintext passwords
+    for user, hashed_password in passwords_database.items():
+        if hashed_password in LUT:
+            users_and_passwords[user] = LUT[hashed_password]
+    
     return users_and_passwords
 
 
@@ -52,6 +60,12 @@ def fix(
     # }
     # tel que H = hash_password(S + password)
 
+    # Update the database with salts and new password hashes
+    for user, password in users_and_passwords.items():
+        salt = random_salt()
+        password_hash = hash_password(salt + password)
+        new_database[user] = {"password_hash": password_hash, "password_salt": salt}
+    
     return new_database
 
 
@@ -59,4 +73,10 @@ def authenticate(
     user: str, password: str, new_database: dict[str, dict[str, str]]
 ) -> bool:
     # Doit renvoyer True si l'utilisateur a envoyé le bon password, False sinon
-    pass
+    if user not in new_database:
+        return False
+    
+    stored_hash = new_database[user]["password_hash"]
+    stored_salt = new_database[user]["password_salt"]
+    
+    return hash_password(stored_salt + password) == stored_hash
